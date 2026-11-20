@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#05010f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Neon Dash: Impossible · Arcade Lab</title>
-<meta name="description" content="Neon Dash: Impossible – a brutal retro rhythm platformer made with AI. 5 impossible levels, gravity flips, triple spikes and an endless mode. Can you beat it? Play free in your browser.">
+<meta name="description" content="Neon Dash: Impossible – a brutal retro rhythm platformer made with AI. 6 impossible levels incl. Neon Grief, gravity flips, triple spikes and an endless mode. Can you beat it? Play free in your browser.">
 <link rel="canonical" href="https://arcadelab-games.github.io/games/09-neon-dash-impossible.html">
-<meta property="og:title" content="Neon Dash: Impossible · Arcade Lab"><meta property="og:description" content="Neon Dash: Impossible – a brutal retro rhythm platformer made with AI. 5 impossible levels, gravity flips, triple spikes and an endless mode. Can you beat it? Play free in your browser.">
+<meta property="og:title" content="Neon Dash: Impossible · Arcade Lab"><meta property="og:description" content="Neon Dash: Impossible – a brutal retro rhythm platformer made with AI. 6 impossible levels incl. Neon Grief, gravity flips, triple spikes and an endless mode. Can you beat it? Play free in your browser.">
 <meta property="og:url" content="https://arcadelab-games.github.io/games/09-neon-dash-impossible.html"><meta property="og:image" content="https://arcadelab-games.github.io/img/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../img/logo.svg">
 <style>
@@ -89,6 +89,19 @@ const SEGS_BY_TIER = [
   ['twoGroups', 'stairs', 'orbChain', 'padJump', 'flip', 'flip', 'platform']
 ];
 
+// level 6 'NEON GRIEF': frame-tight patterns (searched offline: most jumps have a 1-2 frame window)
+const GP = {
+  quad(b,x,r){const n=4; for(let i=0;i<n;i++)b.spike(x+i); return n+3+r()*1.5;},
+  duck(b,x,r){ // spike, then low ceiling right after: jump must clear spike but land before the overhead block
+    b.spike(x); const a=2.0+r()*0.8, bw=3+Math.floor(r()*3); b.block(x+a,2.6+r()*.5,bw,1); return a+bw+2.5;},
+  tunnel(b,x,r){ // low ceiling with a spike gap you must hop exactly
+    const w=7; b.block(x,3.58+r()*.06,w,1); b.spike(x+2+Math.floor(r()*2)); b.spike(x+5); return w+3;},
+  pillar(b,x,r){ b.block(x,0,1,2); b.range(x+1,x+3,b.spike); return 7+r();},
+  flipRun(b,x,r){ b.portal(x,true); let cx=x+3.2+r()*.8; for(let k=0;k<3;k++){const n=3+(r()<.5?1:0); b.range(cx,cx+n-1,b.cspike); cx+=n+2.6+r()*1.2;} b.portal(cx,false); b.range(cx+3.2,cx+5.2,b.spike); return cx-x+10;},
+  orbPit(b,x,r){ const n=10; b.range(x,x+n-1,b.spike); b.orb(x+2.2+r()*.6,2); b.orb(x+6.4+r()*.6,2.2); return n+5;},
+  stepUp(b,x,r){ b.block(x,0,2,1); b.block(x+3.4+r()*.4,1,2,1); b.range(x+2,x+3,b.spike); b.range(x+5.6,x+7.6,b.spike); return 12.5;}
+};
+const GPN = Object.keys(GP);
 // ---------- levels ----------
 function level1(b) {
   const {spike, block, pad, orb, cspike, portal, range} = b;
@@ -109,7 +122,8 @@ const LEVELS = [
   {name: 'UPSIDE DOWN', speed: 102, hue: 40, seed: 0, tiers: [1, 2, 2, 3], focus: 'flip'},
   {name: 'ORB STORM', speed: 106, hue: 120, seed: 0, tiers: [2, 2, 3, 3], focus: 'orbChain'},
   {name: 'THE GAUNTLET', speed: 110, hue: 200, seed: 0, tiers: [2, 3, 3, 3], focus: 'stairs'},
-  {name: '99 PERCENT', speed: 114, hue: 300, seed: 0, tiers: [3, 3, 3, 3], focus: null}
+  {name: '99 PERCENT', speed: 114, hue: 300, seed: 0, tiers: [3, 3, 3, 3], focus: null},
+  {name: 'NEON GRIEF', speed: 116, hue: 330, grief: 322}
 ];
 LEVELS[1].seed = 89; LEVELS[2].seed = 2; LEVELS[3].seed = 2; LEVELS[4].seed = 9;
 function genSegments(b, x0, r, tiers, focus, nPerTier) {
@@ -126,6 +140,7 @@ function genSegments(b, x0, r, tiers, focus, nPerTier) {
 function buildLevel(i) {
   const lv = LEVELS[i], w = makeWorld(lv.speed), b = builder(w);
   if (lv.build) w.END = lv.build(b) * U;
+  else if (lv.grief) { const r = rng(lv.grief); let x = 8; for (let k = 0; k < 14; k++) x += GP[GPN[Math.floor(r() * GPN.length)]](b, x, r); w.END = (x + 1) * U; }
   else { const end = genSegments(b, 12, rng(lv.seed), lv.tiers, lv.focus, 4); w.END = (end + 2) * U; }
   sortW(w); return w;
 }
@@ -179,7 +194,7 @@ function solve(w, s0, goal) {
   const fail = new Set(), presses = new Set(), start = s0.f;
   const maxF = start + Math.ceil((goal - s0.x) / w.speed / STEP) + 10;
   const near = s => { for (const o of w.L) { if (o.x > s.x + 30) break; if (o.t === 'o' && Math.abs(o.x - (s.x + U / 2)) < 14 && Math.abs(o.y - (s.y - U / 2)) < 14) return true; } return false; };
-  let budget = 400000;
+  let budget = solve.budget || 400000;
   function dfs(s) {
     for (;;) {
       if (--budget < 0) return false;
@@ -270,8 +285,8 @@ function sfx(f1, f2, d, v) {
 // ---------- save: {p: best % per level, a: attempts per level, e: endless best (blocks)} ----------
 const SAVE = (() => {
   let v = null; try { v = JSON.parse(localStorage.getItem(ID) || 'null'); } catch (e) {}
-  v = v && Array.isArray(v.p) ? v : {p: [0, 0, 0, 0, 0], a: [0, 0, 0, 0, 0], e: 0};
-  while (v.p.length < 5) v.p.push(0); while (v.a.length < 5) v.a.push(0); v.e = v.e | 0;
+  v = v && Array.isArray(v.p) ? v : {p: [], a: [], e: 0};
+  while (v.p.length < LEVELS.length) v.p.push(0); while (v.a.length < LEVELS.length) v.a.push(0); v.e = v.e | 0;
   try { const old = +localStorage.getItem('neondash_imp_best') || 0; if (old > v.p[0]) v.p[0] = Math.min(100, old); } catch (e) {}
   return v;
 })();
@@ -433,23 +448,25 @@ function draw() {
     button('ENDLESS', 22, 102, 76, 22, () => begin(-1), '#2de2e6', 'BEST ' + SAVE.e + 'M');
     button(muted ? 'SOUND: OFF' : 'SOUND: ON', 22, 128, 76, 12, toggleMute, '#b8a3ff');
     const done = SAVE.p.filter(x => x >= 100).length;
-    text('CLEARED ' + done + '/5', W / 2, 172, 1, '#f9c80e', 'c');
+    text('CLEARED ' + done + '/' + LEVELS.length, W / 2, 172, 1, '#f9c80e', 'c');
     text('TAP OR SPACE TO JUMP', W / 2, 182, 1, '#b8a3ff', 'c');
   }
   if (S.mode === 'levels') {
     text('LEVELS', W / 2, 8, 2, '#2de2e6', 'c');
     LEVELS.forEach((lv, i) => {
       const p = SAVE.p[i];
-      button((i + 1) + '. ' + lv.name, 8, 22 + i * 26, 104, 22, () => begin(i), p >= 100 ? '#9cff57' : '#ff2a6d', p >= 100 ? 'CLEARED' : 'BEST ' + p + '%' + (SAVE.a[i] ? ' / ' + SAVE.a[i] + ' TRIES' : ''));
+      const g = !!lv.grief;
+      button((i + 1) + '. ' + lv.name, 8, 21 + i * 22, 104, 19, () => begin(i), p >= 100 ? '#9cff57' : g ? '#f9c80e' : '#ff2a6d', p >= 100 ? 'CLEARED' : g ? 'UNBEATEN - BEST ' + p + '%' : 'BEST ' + p + '%' + (SAVE.a[i] ? ' / ' + SAVE.a[i] + ' TRIES' : ''));
     });
-    button('BACK', 30, 156, 60, 12, () => setMode('title'), '#b8a3ff');
+    button('BACK', 30, 158, 60, 12, () => setMode('title'), '#b8a3ff');
   }
   if (S.mode === 'dead' && S.newBest) text('NEW BEST!', W / 2, 96, 2, '#f9c80e', 'c');
+  if (!S.endless && LEVELS[S.lvl] && LEVELS[S.lvl].grief && S.mode === 'play' && S.runT < 2.4 && S.attempt <= 3) { text('NOBODY HAS BEATEN IT', W / 2, 174, 1, '#f9c80e', 'c'); text('AI VERIFIED: IT IS POSSIBLE', W / 2, 182, 1, '#ffffff', 'c'); text('1-FRAME JUMPS', W / 2, 190, 1, '#ff2a6d', 'c'); }
   if (S.mode === 'win') {
     text('LEVEL', W / 2, 52, 5, '#9cff57', 'c'); text('COMPLETE!', W / 2, 78, 3, '#9cff57', 'c');
     text('ATTEMPTS: ' + S.attempt, W / 2, 104, 1, '#ffffff', 'c');
     if (S.winT > 1.2) {
-      if (S.lvl < 4) button('NEXT LEVEL', 22, 118, 76, 14, () => begin(S.lvl + 1), '#9cff57');
+      if (S.lvl < LEVELS.length - 1) button('NEXT LEVEL', 22, 118, 76, 14, () => begin(S.lvl + 1), '#9cff57');
       button('LEVELS', 22, 136, 76, 12, () => setMode('levels'), '#b8a3ff');
     }
   }
@@ -519,7 +536,7 @@ if (TOUCH) {
   addEventListener('resize', upd); upd();
 }
 
-window.GAME = {S, tick, draw, begin, startRun, AUTO, solve, LEVELS, buildLevel, newRun, step, E, newEndless, addChunk, SAVE, setMode, quit};
+window.GAME = {S, tick, draw, begin, startRun, AUTO, solve, LEVELS, buildLevel, newRun, step, E, newEndless, addChunk, SAVE, setMode, quit, makeWorld, builder, sortW, U, GY, CEIL, clone};
 if (!REC) {
   let last = performance.now(), acc = 0;
   (function loop(now) { acc += Math.min(.1, (now - last) / 1000); last = now; while (acc >= STEP) { tick(STEP); acc -= STEP; } draw(); requestAnimationFrame(loop); })(last);
@@ -527,7 +544,7 @@ if (!REC) {
 })();
 
 </script>
-<script src="../al.js?v=3"></script>
+<script src="../al.js?v=4"></script>
 <a id="al-home" href="../index.html" aria-label="Back to Arcade Lab">&#9664; ARCADE LAB</a>
 <style>#al-home{position:fixed;top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));z-index:9;font:bold 12px/1 monospace;letter-spacing:1px;color:#f9c80e;background:rgba(0,0,0,.6);border:2px solid #f9c80e;padding:9px 10px;text-decoration:none}#al-home.hide{display:none}</style>
 <script>setInterval(function(){var a=document.getElementById('al-home');if(window.GAME)a.classList.toggle('hide',GAME.S.mode!=='title'&&GAME.S.mode!=='levels');},250);</script>

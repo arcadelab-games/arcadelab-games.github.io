@@ -353,6 +353,44 @@ function makeKit(cv, ctx, W, H, opt) {
     cv.style.width = Math.floor(W * k) + 'px'; cv.style.height = Math.floor(H * k) + 'px';
   }
   addEventListener('resize', fit); fit();
+  // ---------- phone helpers ----------
+  const TOUCH = !!(window.matchMedia && matchMedia('(pointer: coarse)').matches) || 'ontouchstart' in window;
+  // iOS unlocks Web Audio only inside touchend/click
+  addEventListener('touchend', actx, {passive: true}); addEventListener('click', actx);
+  try { const st = document.createElement('style'); st.textContent = 'html,body{-webkit-touch-callout:none;overscroll-behavior:none}'; document.head.appendChild(st); } catch (e) {}
+  // fullscreen + orientation lock on phones that support it (Android); iOS ignores this
+  let fsTried = false, fsUserLeft = false;
+  function goFull() {
+    if (!TOUCH || fsUserLeft || document.fullscreenElement || K.rec) return;
+    const el = document.documentElement;
+    if (!el.requestFullscreen || !document.fullscreenEnabled) return;
+    fsTried = true;
+    el.requestFullscreen({navigationUI: 'hide'}).then(() => {
+      try { screen.orientation && screen.orientation.lock && screen.orientation.lock(LAND ? 'landscape' : 'portrait').catch(() => {}); } catch (e) {}
+    }).catch(() => {});
+  }
+  addEventListener('touchend', () => { if (K.mode !== 'title' || K.t > .3) goFull(); }, {passive: true});
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && fsTried) fsUserLeft = true; setTimeout(fit, 60); });
+  // keep the screen on while playing
+  let wl = null;
+  function wake() {
+    const want = K.mode === 'play' && !document.hidden;
+    try {
+      if (want && !wl && navigator.wakeLock) { wl = 1; navigator.wakeLock.request('screen').then(l => { wl = l; l.addEventListener('release', () => { if (wl === l) wl = null; }); }).catch(() => { wl = null; }); }
+      if (!want && wl && wl.release) { const l = wl; wl = null; l.release().catch(() => {}); }
+    } catch (e) {}
+  }
+  setInterval(wake, 1000);
+  // phone held the wrong way: hint in the empty side area
+  if (TOUCH && !document.getElementById('hint')) {
+    const h = document.createElement('div');
+    h.id = 'rot-hint';
+    h.innerHTML = '&#8635; ROTATE YOUR PHONE<br>FOR A BIGGER SCREEN';
+    h.style.cssText = 'position:fixed;left:0;bottom:max(10px,env(safe-area-inset-bottom));width:100%;text-align:center;font:bold 11px/1.6 monospace;letter-spacing:1px;color:#f9c80e;pointer-events:none;z-index:8;display:none';
+    document.body.appendChild(h);
+    const upd = () => { const land = innerWidth > innerHeight; h.style.display = (land !== LAND && Math.min(innerWidth, innerHeight) < 600) ? 'block' : 'none'; if (!LAND && land) { h.style.width = 'auto'; h.style.left = '12px'; h.style.top = '50%'; h.style.bottom = 'auto'; h.style.transform = 'translateY(-50%)'; h.style.textAlign = 'left'; h.style.maxWidth = Math.max(80, (innerWidth - innerHeight * W / H) / 2 - 20) + 'px'; } else { h.style.width = '100%'; h.style.left = '0'; h.style.top = 'auto'; h.style.bottom = 'max(10px,env(safe-area-inset-bottom))'; h.style.transform = 'none'; h.style.textAlign = 'center'; h.style.maxWidth = 'none'; } };
+    addEventListener('resize', upd); upd();
+  }
   K.text = text; K.wrap = wrap; K.beep = beep; K.star = star; K.save = SV; K.setMode = setMode; K.startLevel = startLevel; K.startEndless = startEndless;
   K.music = music; K.muted = () => muted;
   K.run = function () {

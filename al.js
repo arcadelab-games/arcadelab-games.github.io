@@ -5,7 +5,7 @@ window.AL_API = window.AL_API || 'https://script.google.com/macros/s/AKfycbx6tIz
 
 (function () {
   var GAMES = ['neonrunner', 'skyhop', 'neonblaster', 'neonstack', 'neonmaze', 'fistnight', 'neondash', 'neonrail'];
-  var NL = 16, KEY = 'al_player';
+  var NL = 16, KEY = 'al_player', IMP = 'neondashimp';
   function api() { return window.AL_API || ''; }
   function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
   function player() { try { return JSON.parse(ls(KEY) || 'null'); } catch (e) { return null; } }
@@ -18,10 +18,20 @@ window.AL_API = window.AL_API || 'https://script.google.com/macros/s/AKfycbx6tIz
       for (var i = 0; i < NL; i++) s.push(Math.max(0, Math.min(3, (sv.s && sv.s[i]) | 0)));
       if (s.some(function (x) { return x > 0; })) out[g] = {s: s, d: !!sv.done};
     });
+    var m = imp();
+    if (m.e > 0 || m.p.some(function (x) { return x > 0; })) out[IMP] = {p: m.p.slice(0, 5), e: m.e};
     return out;
+  }
+  function imp() {
+    var v = null; try { v = JSON.parse(ls(IMP) || 'null'); } catch (e) {}
+    v = v && Array.isArray(v.p) ? v : {p: [0, 0, 0, 0, 0], a: [0, 0, 0, 0, 0], e: 0};
+    while (v.p.length < 5) v.p.push(0); if (!Array.isArray(v.a)) v.a = [0, 0, 0, 0, 0]; v.e = v.e | 0;
+    return v;
   }
   function applyProg(prog) {
     if (!prog) return;
+    var r = prog[IMP];
+    if (r && r.p) { var m = imp(); for (var j = 0; j < 5; j++) m.p[j] = Math.max(m.p[j] | 0, r.p[j] | 0); m.e = Math.max(m.e, r.e | 0); ls(IMP, JSON.stringify(m)); }
     GAMES.forEach(function (g) {
       var v = prog[g]; if (!v || !v.s) return;
       var sv = save(g), s = sv.s || [], last = -1;
@@ -41,6 +51,7 @@ window.AL_API = window.AL_API || 'https://script.google.com/macros/s/AKfycbx6tIz
   var lastPlay = 0, syncing = null;
   window.AL = {
     GAMES: GAMES,
+    imp: imp,
     enabled: function () { return !!api(); },
     player: player,
     fmtCode: function (c) { c = String(c || ''); return c.slice(0, 4) + '-' + c.slice(4); },

@@ -7,9 +7,9 @@
 <link rel="icon" type="image/svg+xml" href="img/logo.svg">
 <link rel="apple-touch-icon" href="img/logo-192.png">
 <title>Arcade Lab · Retro games made with AI</title>
-<meta name="description" content="8 retro browser games made with AI. Each has a story campaign with 16 levels, bosses and stars. Play free on phone, tablet or computer.">
+<meta name="description" content="9 retro browser games made with AI: story campaigns with 16 levels, bosses and stars, plus Neon Dash: Impossible. Play free on phone, tablet or computer.">
 <meta property="og:title" content="Arcade Lab">
-<meta property="og:description" content="8 retro games made with AI. 128 levels. Play in your browser.">
+<meta property="og:description" content="9 retro games made with AI. 133 levels. Play in your browser.">
 <link rel="canonical" href="https://arcadelab-games.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Arcade Lab">
@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://arcadelab-games.github.io/img/og.png">
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Arcade Lab","url":"https://arcadelab-games.github.io/","description":"8 retro browser games made with AI, free to play."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Arcade Lab","url":"https://arcadelab-games.github.io/","description":"9 retro browser games made with AI, free to play."}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -114,8 +114,8 @@ tr.me td{color:var(--yellow);background:#1b1b3a}
 <section class="hero"><div class="wrap">
   <img class="emblem" src="img/logo.svg" alt="Arcade Lab logo: a pixel arcade cabinet" width="240" height="240">
   <h1>ARCADE<br>LAB</h1>
-  <p>8 RETRO GAMES MADE BY AI. EACH ONE HAS A STORY, 16 LEVELS AND A FINAL BOSS. PLAY FREE IN YOUR BROWSER.</p>
-  <div class="stats"><div><span>8</span> GAMES</div><div><span>128</span> LEVELS</div><div><span>8</span> STORIES</div><div id="today-wrap" hidden><span id="today">0</span> PLAYS TODAY</div></div>
+  <p>9 RETRO GAMES MADE BY AI. STORY CAMPAIGNS WITH BOSSES, ENDLESS MODES AND ONE IMPOSSIBLE CHALLENGE. PLAY FREE IN YOUR BROWSER.</p>
+  <div class="stats"><div><span>9</span> GAMES</div><div><span>133</span> LEVELS</div><div><span>8</span> STORIES</div><div id="today-wrap" hidden><span id="today">0</span> PLAYS TODAY</div></div>
   <a class="start" href="#games"><span class="blink">PRESS START</span></a>
 </div></section>
 
@@ -131,7 +131,7 @@ tr.me td{color:var(--yellow);background:#1b1b3a}
       <div class="pbar" id="pbar"></div>
       <div class="tabs" id="tabs" role="group" aria-label="Leaderboard"></div>
       <p class="mine" id="mine"></p>
-      <table><thead><tr><th>#</th><th>PLAYER</th><th class="r">STARS</th><th class="r">LEVELS</th></tr></thead><tbody id="lb"></tbody></table>
+      <table><thead><tr><th>#</th><th>PLAYER</th><th class="r" id="h1">STARS</th><th class="r" id="h2">LEVELS</th></tr></thead><tbody id="lb"></tbody></table>
       <p id="lb-note"></p>
     </div>
     <div id="offline">
@@ -159,7 +159,7 @@ tr.me td{color:var(--yellow);background:#1b1b3a}
 
 <footer><div class="wrap"><span>&copy; ARCADE LAB &middot; A NEW AI GAME EVERY DAY</span><span><a href="https://www.youtube.com/@ArcadeLab-i5s" target="_blank" rel="noopener">YOUTUBE</a> &middot; <a href="https://www.tiktok.com/@arcade.lab7" target="_blank" rel="noopener">TIKTOK @ARCADE.LAB7</a></span></div></footer>
 
-<script src="al.js?v=2"></script>
+<script src="al.js?v=3"></script>
 <script>
 var GAMES = [
   {f:'01-neon-runner', id:'neonrunner', name:'NEON RUNNER', genre:'RUNNER', story:'CARRY THE LAST CHIP ACROSS A DARK CITY AND REBOOT THE SUN.', ctl:'TAP / SPACE: JUMP'},
@@ -169,17 +169,30 @@ var GAMES = [
   {f:'05-neon-maze', id:'neonmaze', name:'NEON MAZE', genre:'MAZE CHASE', story:'BYTE CLEANS FIVE MAZES OF WARPS, DARKNESS AND LASERS.', ctl:'SWIPE / ARROWS'},
   {f:'06-fist-of-the-night', id:'fistnight', name:'FIST OF THE NIGHT', genre:'BEAT EM UP', story:'FIGHT THROUGH THE CITY AND RESCUE MAYA FROM THE KINGPIN.', ctl:'PADS / ARROWS, Z JUMP, X HIT'},
   {f:'07-neon-dash', id:'neondash', name:'NEON DASH', genre:'RHYTHM PLATFORMER', story:'JUMP TO THE BEAT, FLIP GRAVITY AND BRING THE MUSIC BACK.', ctl:'TAP / SPACE: JUMP'},
-  {f:'08-neon-rail', id:'neonrail', name:'NEON RAIL', genre:'RHYTHM GAME', story:'16 TRACKS OF SYNTHWAVE. RIDE THE GRID TO THE CONDUCTOR.', ctl:'TAP LEFT / RIGHT, F / J'}
+  {f:'08-neon-rail', id:'neonrail', name:'NEON RAIL', genre:'RHYTHM GAME', story:'16 TRACKS OF SYNTHWAVE. RIDE THE GRID TO THE CONDUCTOR.', ctl:'TAP LEFT / RIGHT, F / J'},
+  {f:'09-neon-dash-impossible', id:'neondashimp', name:'NEON DASH: IMPOSSIBLE', genre:'HARDCORE PLATFORMER', story:'YOU SAID NEON DASH WAS TOO EASY. 5 BRUTAL LEVELS AND AN ENDLESS RUN. CAN YOU BEAT IT?', ctl:'TAP / SPACE: JUMP', imp:true}
 ];
 var NAMES = {}; GAMES.forEach(function(g){ NAMES[g.id] = g.name; });
 function save(id){ try { return JSON.parse(localStorage.getItem(id + '_story') || 'null') || {u:0,s:[]}; } catch(e){ return {u:0,s:[]}; } }
 function esc(t){ return String(t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 var fmt = function(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
 var grid = document.getElementById('grid'), rows = document.getElementById('rows'), PLAYS = null;
+function impCard(g, i){
+  var m = window.AL ? AL.imp() : {p:[0,0,0,0,0], e:0}, cleared = m.p.filter(function(x){ return x >= 100; }).length, best = Math.max.apply(null, m.p), avg = Math.round(m.p.reduce(function(a,b){ return a + b; }, 0) / 5);
+  var n = PLAYS && PLAYS[g.id], a = document.createElement('article'); a.className = 'cart';
+  a.innerHTML = '<a class="shot" href="games/' + g.f + '.html" tabindex="-1" aria-hidden="true"><img src="img/' + g.f + '.png" alt="" loading="lazy"><span class="num">#0' + (i + 1) + '</span></a>' +
+    '<div class="body"><h3>' + g.name + '</h3><p class="genre">' + g.genre + '</p><p class="story">' + g.story + '</p>' +
+    '<div class="meta"><span class="stars">CLEARED ' + cleared + '/5</span><span>BEST ' + best + '%</span></div>' +
+    '<div class="bar"><i style="width:' + avg + '%"></i></div>' +
+    '<p class="controls">' + g.ctl + (m.e ? ' &middot; ENDLESS ' + m.e + 'M' : '') + '</p>' + (n ? '<p class="plays">&#9654; ' + fmt(n) + (n === 1 ? ' PLAY' : ' PLAYS') + '</p>' : '') +
+    '<a class="play" href="games/' + g.f + '.html">' + (best ? 'TRY AGAIN' : 'PLAY') + '</a></div>';
+  return a;
+}
 function render(){
   var total = 0, list = [];
   grid.innerHTML = ''; rows.innerHTML = '';
   GAMES.forEach(function(g, i){
+    if (g.imp) { grid.appendChild(impCard(g, i)); return; }
     var sv = save(g.id), st = (sv.s || []).reduce(function(a, b){ return a + (b || 0); }, 0), lvl = Math.min(16, (sv.u || 0) + 1);
     total += st; list.push({g:g, st:st, lvl:sv.done ? 'DONE' : lvl + '/16'});
     var n = PLAYS && PLAYS[g.id];
@@ -235,12 +248,15 @@ function pbar(msg){
   };
 }
 function tabs(){
-  var el = document.getElementById('tabs'), list = [{id:'all', name:'ALL GAMES'}].concat(GAMES);
+  var el = document.getElementById('tabs'), list = [{id:'all', name:'ALL GAMES'}].concat(GAMES.filter(function(g){ return !g.imp; })).concat([{id:'neondashimp', name:'IMPOSSIBLE'}, {id:'neondashimp_e', name:'IMPOSSIBLE ENDLESS'}]);
   el.innerHTML = list.map(function(g){ return '<button type="button" data-g="' + g.id + '" aria-pressed="' + (g.id === TAB) + '">' + g.name + '</button>'; }).join('');
   el.querySelectorAll('button').forEach(function(b){ b.onclick = function(){ TAB = b.dataset.g; tabs(); board(); }; });
 }
 function board(){
   var lb = document.getElementById('lb'), mine = document.getElementById('mine'), note = document.getElementById('lb-note'), max = TAB === 'all' ? 384 : 48;
+  var IMPT = TAB === 'neondashimp', IMPE = TAB === 'neondashimp_e';
+  document.getElementById('h1').textContent = IMPT ? 'PROGRESS' : IMPE ? 'DISTANCE' : 'STARS'; document.getElementById('h2').textContent = IMPT ? 'CLEARED' : IMPE ? '' : 'LEVELS';
+  var c1 = function(x){ return IMPT ? Math.round(x.stars / 5) + '%' : IMPE ? x.stars + 'M' : x.stars + '/' + max; }, c2 = function(x){ return IMPT ? x.levels + '/5' : IMPE ? '' : x.levels; };
   lb.innerHTML = '<tr><td colspan="4">LOADING...</td></tr>'; mine.textContent = ''; note.textContent = '';
   AL.board(TAB).then(function(r){
     if (!r.ok) throw 0;
@@ -248,11 +264,11 @@ function board(){
     if (!r.top.length) { lb.innerHTML = '<tr><td colspan="4">NO SCORES YET. BE THE FIRST!</td></tr>'; return; }
     var html = r.top.map(function(x){
       var me = r.me && x.rank === r.me.rank;
-      return '<tr class="' + (me ? 'me' : x.rank === 1 ? 'top' : '') + '"><td>' + (x.rank <= 3 ? ['1ST','2ND','3RD'][x.rank - 1] : x.rank) + '</td><td>' + esc(x.nick) + '</td><td class="r">' + x.stars + '/' + max + '</td><td class="r">' + x.levels + '</td></tr>';
+      return '<tr class="' + (me ? 'me' : x.rank === 1 ? 'top' : '') + '"><td>' + (x.rank <= 3 ? ['1ST','2ND','3RD'][x.rank - 1] : x.rank) + '</td><td>' + esc(x.nick) + '</td><td class="r">' + c1(x) + '</td><td class="r">' + c2(x) + '</td></tr>';
     }).join('');
-    if (r.me && r.me.rank > r.top.length) html += '<tr class="me"><td>' + r.me.rank + '</td><td>' + esc(r.me.nick) + '</td><td class="r">' + r.me.stars + '/' + max + '</td><td class="r">' + r.me.levels + '</td></tr>';
+    if (r.me && r.me.rank > r.top.length) html += '<tr class="me"><td>' + r.me.rank + '</td><td>' + esc(r.me.nick) + '</td><td class="r">' + c1(r.me) + '</td><td class="r">' + c2(r.me) + '</td></tr>';
     lb.innerHTML = html;
-    if (r.me) mine.textContent = 'YOU: ' + r.me.rank + ' OF ' + r.players; else if (p) mine.textContent = 'EARN A STAR TO GET ON THE BOARD';
+    if (r.me) mine.textContent = 'YOU: ' + r.me.rank + ' OF ' + r.players; else if (p) mine.textContent = IMPT || IMPE ? 'PLAY IMPOSSIBLE TO GET ON THE BOARD' : 'EARN A STAR TO GET ON THE BOARD';
     note.textContent = r.players + (r.players === 1 ? ' PLAYER' : ' PLAYERS') + ' ON THE BOARD';
   }).catch(function(){ lb.innerHTML = '<tr><td colspan="4">HIGH SCORES ARE OFFLINE RIGHT NOW.</td></tr>'; });
 }

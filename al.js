@@ -1,7 +1,7 @@
 // Arcade Lab: player nickname, return code, leaderboard and play counter.
 // Paste your Google Apps Script web app URL (ends with /exec) between the quotes.
 // Leave it empty to switch these features off (the site still works).
-window.AL_API = window.AL_API || '';
+window.AL_API = window.AL_API || 'https://script.google.com/macros/s/AKfycbx6tIzzmDwML6UJ4iMlZJVkqjKpNKgqch3Jbr114N8_u6wmhv8p4elau6S7rpzuvxfp/exec';
 
 (function () {
   var GAMES = ['neonrunner', 'skyhop', 'neonblaster', 'neonstack', 'neonmaze', 'fistnight', 'neondash', 'neonrail'];

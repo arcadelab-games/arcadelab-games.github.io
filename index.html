@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1B1B3A">
+<link rel="icon" type="image/svg+xml" href="img/logo.svg">
+<link rel="apple-touch-icon" href="img/logo-192.png">
+<title>Arcade Lab · Retro games made with AI</title>
+<meta name="description" content="8 retro browser games made with AI. Each has a story campaign with 16 levels, bosses and stars. Play free on phone, tablet or computer.">
+<meta property="og:title" content="Arcade Lab">
+<meta property="og:description" content="8 retro games made with AI. 128 levels. Play in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1B1B3A;--card:#2B2B5A;--dark:#000;--red:#E83F3F;--yellow:#FFD23F;--blue:#3F7FE8;--white:#F8F8F8;--muted:#B8B8D8;--lock:#55557A}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--white);font-family:'Press Start 2P',ui-monospace,monospace;font-size:14px;line-height:1.8;-webkit-font-smoothing:none}
+a{color:var(--yellow)}a:hover{color:var(--white)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.topbar{background:var(--dark);font-size:11px}
+.topbar .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding-top:10px;padding-bottom:10px}
+.topbar b{color:var(--red);font-weight:400}
+header .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;padding-top:18px;padding-bottom:18px}
+.logo{color:var(--yellow);text-decoration:none;font-size:18px;text-shadow:3px 3px 0 var(--red);display:flex;align-items:center;gap:12px}.logo img{width:40px;height:40px;image-rendering:pixelated}
+.emblem{display:block;width:clamp(160px,40vw,240px);height:auto;margin:0 auto 26px;image-rendering:pixelated;filter:drop-shadow(0 0 18px rgba(45,226,230,.35))}
+nav{display:flex;flex-wrap:wrap;gap:20px;font-size:11px}
+nav a{color:var(--white);text-decoration:none;padding:8px 0}
+nav a:hover{color:var(--yellow)}
+.hero{text-align:center;padding:48px 0 64px}
+.hero h1{margin:0;font-size:clamp(40px,10vw,76px);line-height:1.15;font-weight:400;color:var(--yellow);text-shadow:6px 6px 0 var(--red),12px 12px 0 var(--blue)}
+.hero p{margin:28px auto 0;max-width:720px;color:var(--muted);font-size:clamp(11px,2.4vw,15px)}
+.stats{display:flex;justify-content:center;flex-wrap:wrap;gap:28px;margin-top:26px;font-size:12px}
+.stats span{color:var(--yellow)}
+.start{display:inline-block;margin-top:34px;background:var(--red);color:var(--white);text-decoration:none;font-size:clamp(16px,3.6vw,22px);padding:20px 36px;box-shadow:0 -6px 0 #000,0 6px 0 #000,-6px 0 0 #000,6px 0 0 #000,0 12px 0 #7A1A1A}
+.start:hover{color:var(--yellow)}
+.blink{animation:blink 1s steps(2) infinite}@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.blink{animation:none}html{scroll-behavior:auto}}
+h2{font-weight:400;text-align:center;font-size:clamp(16px,3.4vw,24px);margin:0 0 34px}
+section{padding:24px 0 64px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:36px;padding:6px}
+.cart{background:var(--card);box-shadow:0 -6px 0 var(--white),0 6px 0 var(--white),-6px 0 0 var(--white),6px 0 0 var(--white);display:flex;flex-direction:column}
+.cart .shot{display:block;height:220px;background:#0E1020;overflow:hidden;position:relative}
+.cart img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}
+.cart .num{position:absolute;left:8px;top:8px;background:#000;color:var(--yellow);font-size:10px;padding:4px 6px}
+.cart .body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.cart h3{margin:0;font-size:15px;font-weight:400;color:var(--yellow)}
+.cart .genre{font-size:9px;color:var(--blue);margin:0}
+.cart .story{font-size:10px;color:var(--muted);margin:0;line-height:1.9;flex:1}
+.cart .meta{display:flex;justify-content:space-between;align-items:center;font-size:10px}
+.stars{color:var(--yellow)}
+.bar{height:8px;background:#000;position:relative}.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--yellow)}
+.play{align-self:flex-start;background:var(--blue);color:var(--white);text-decoration:none;font-size:13px;padding:12px 18px;box-shadow:0 6px 0 #1F3F7A;margin-top:4px}
+.play:hover{color:var(--yellow)}
+.controls{font-size:9px;color:var(--muted);margin:0}
+.plays{font-size:9px;color:var(--yellow);margin:0}
+.board{background:#000;padding:36px 22px;max-width:760px;margin:0 auto}
+.board h2{color:var(--red);margin-bottom:10px}
+.board .sub{text-align:center;font-size:10px;color:var(--muted);margin:0 0 22px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{font-weight:400;color:var(--muted);text-align:left;padding:8px 6px;font-size:9px}
+td{padding:10px 6px;border-top:2px solid #1b1b2b}
+td.r,th.r{text-align:right}
+tr.top td{color:var(--yellow)}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.how div{background:var(--card);padding:22px;box-shadow:0 6px 0 #000}
+.how b{display:block;color:var(--yellow);font-weight:400;font-size:22px;margin-bottom:10px}
+.how p{margin:0;font-size:10px;color:var(--muted);line-height:2}
+.cta{text-align:center}
+.cta p{font-size:11px;color:var(--muted);max-width:640px;margin:0 auto 26px;line-height:2}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+.btn{text-decoration:none;font-size:13px;padding:16px 24px;color:var(--white)}
+.btn.yes{background:var(--red);box-shadow:0 6px 0 #7A1A1A}
+.btn.no{background:var(--lock);box-shadow:0 6px 0 #2B2B4A}
+footer{background:#000;font-size:10px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-top:20px;padding-bottom:20px}
+@media (max-width:520px){body{font-size:12px}.cart .shot{height:200px}nav{gap:14px}}
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 18px}
+.tabs button{font:inherit;font-size:9px;background:#1b1b2b;color:var(--muted);border:0;padding:10px 10px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--yellow);color:#000}
+.pbar{background:#14143a;padding:16px;margin:0 0 20px;font-size:10px;line-height:2;text-align:center}
+.pbar b{color:var(--yellow);font-weight:400}
+.pbar form{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:10px}
+.pbar input{font:inherit;font-size:12px;background:#000;color:var(--white);border:3px solid var(--blue);padding:10px;min-width:0;flex:1 1 180px;max-width:260px;text-transform:none}
+.pbar button,.lnk{font:inherit;font-size:11px;background:var(--blue);color:var(--white);border:0;padding:12px 16px;cursor:pointer;box-shadow:0 4px 0 #1F3F7A}
+.pbar .lnk,.lnk{background:transparent;box-shadow:none;color:var(--muted);text-decoration:underline;padding:8px}
+.msg{color:var(--red);min-height:1em;margin:8px 0 0}
+.code{color:var(--white);letter-spacing:2px}
+tr.me td{color:var(--yellow);background:#1b1b3a}
+.mine{text-align:center;font-size:10px;color:var(--yellow);margin:0 0 14px}
+#lb-note{text-align:center;font-size:10px;color:var(--muted);margin:14px 0 0}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap"><span><b>1UP</b> <span id="up">000000</span></span><span><b>STARS</b> <span id="hi">0/384</span></span><span id="plays-wrap" hidden><b>PLAYED</b> <span id="plays">0</span></span></div></div>
+<header><div class="wrap">
+  <a class="logo" href="#top"><img src="img/logo.svg" alt="" width="40" height="40">ARCADE LAB</a>
+  <nav aria-label="Main"><a href="#games">GAMES</a><a href="#scores">HIGH SCORES</a><a href="#how">HOW</a><a href="#request">REQUEST</a><a href="https://www.youtube.com/@ArcadeLab-i5s" target="_blank" rel="noopener">YOUTUBE</a><a href="https://www.tiktok.com/@arcade.lab7" target="_blank" rel="noopener">TIKTOK</a></nav>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap">
+  <img class="emblem" src="img/logo.svg" alt="Arcade Lab logo: a pixel arcade cabinet" width="240" height="240">
+  <h1>ARCADE<br>LAB</h1>
+  <p>8 RETRO GAMES MADE BY AI. EACH ONE HAS A STORY, 16 LEVELS AND A FINAL BOSS. PLAY FREE IN YOUR BROWSER.</p>
+  <div class="stats"><div><span>8</span> GAMES</div><div><span>128</span> LEVELS</div><div><span>8</span> STORIES</div><div id="today-wrap" hidden><span id="today">0</span> PLAYS TODAY</div></div>
+  <a class="start" href="#games"><span class="blink">PRESS START</span></a>
+</div></section>
+
+<section id="games"><div class="wrap">
+  <h2>&mdash; SELECT YOUR GAME &mdash;</h2>
+  <div class="grid" id="grid"></div>
+</div></section>
+
+<section id="scores"><div class="wrap">
+  <div class="board">
+    <h2>HIGH SCORES</h2>
+    <div id="online" hidden>
+      <div class="pbar" id="pbar"></div>
+      <div class="tabs" id="tabs" role="group" aria-label="Leaderboard"></div>
+      <p class="mine" id="mine"></p>
+      <table><thead><tr><th>#</th><th>PLAYER</th><th class="r">STARS</th><th class="r">LEVELS</th></tr></thead><tbody id="lb"></tbody></table>
+      <p id="lb-note"></p>
+    </div>
+    <div id="offline">
+      <p class="sub">YOUR PROGRESS &middot; SAVED ON THIS DEVICE</p>
+      <table><thead><tr><th>GAME</th><th class="r">STARS</th><th class="r">LEVEL</th></tr></thead><tbody id="rows"></tbody></table>
+    </div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2>HOW IT'S MADE</h2>
+  <div class="how">
+    <div><b>01</b><p>A VIEWER SUGGESTS A GAME IN THE COMMENTS OF OUR SHORTS.</p></div>
+    <div><b>02</b><p>AI WRITES THE WHOLE GAME IN ONE HTML FILE: GRAPHICS, MUSIC, LEVELS.</p></div>
+    <div><b>03</b><p>YOU PLAY IT HERE. ON A PHONE, A TABLET OR A COMPUTER.</p></div>
+  </div>
+</div></section>
+
+<section id="request" class="cta"><div class="wrap">
+  <h2 style="color:var(--yellow)">CONTINUE?</h2>
+  <p>WANT THE NEXT GAME? COMMENT YOUR IDEA UNDER OUR LATEST VIDEO ON YOUTUBE OR TIKTOK. THE BEST ONE GETS BUILT.</p>
+  <div class="btns"><a class="btn yes" href="https://www.youtube.com/@ArcadeLab-i5s" target="_blank" rel="noopener">YOUTUBE</a><a class="btn yes" id="tt" href="https://www.tiktok.com/@arcade.lab7" target="_blank" rel="noopener">TIKTOK</a><a class="btn no" href="#top">NO &middot; BACK</a></div>
+</div></section>
+</main>
+
+<footer><div class="wrap"><span>&copy; ARCADE LAB &middot; A NEW AI GAME EVERY DAY</span><span><a href="https://www.youtube.com/@ArcadeLab-i5s" target="_blank" rel="noopener">YOUTUBE</a> &middot; <a href="https://www.tiktok.com/@arcade.lab7" target="_blank" rel="noopener">TIKTOK @ARCADE.LAB7</a></span></div></footer>
+
+<script src="al.js"></script>
+<script>
+var GAMES = [
+  {f:'01-neon-runner', id:'neonrunner', name:'NEON RUNNER', genre:'RUNNER', story:'CARRY THE LAST CHIP ACROSS A DARK CITY AND REBOOT THE SUN.', ctl:'TAP / SPACE: JUMP'},
+  {f:'02-sky-hop', id:'skyhop', name:'SKY HOP', genre:'FLY &amp; DODGE', story:'HOPPER FLIES THROUGH FIVE SKIES TO SAVE HER CHICKS FROM THE STORM HAWK.', ctl:'TAP / SPACE: FLAP'},
+  {f:'03-neon-blaster', id:'neonblaster', name:'NEON BLASTER', genre:'SPACE SHOOTER', story:'STOP THE HIVE FLEET. BEAT FIVE BOSSES AND THE MOTHERSHIP.', ctl:'DRAG / ARROWS: MOVE'},
+  {f:'04-neon-stack', id:'neonstack', name:'NEON STACK', genre:'BLOCK PUZZLE', story:'CLEAR JUNK, SET OFF BOMBS, GRAB GEMS AND DELETE THE VIRUS.', ctl:'SWIPE / ARROWS, TAP: ROTATE'},
+  {f:'05-neon-maze', id:'neonmaze', name:'NEON MAZE', genre:'MAZE CHASE', story:'BYTE CLEANS FIVE MAZES OF WARPS, DARKNESS AND LASERS.', ctl:'SWIPE / ARROWS'},
+  {f:'06-fist-of-the-night', id:'fistnight', name:'FIST OF THE NIGHT', genre:'BEAT EM UP', story:'FIGHT THROUGH THE CITY AND RESCUE MAYA FROM THE KINGPIN.', ctl:'PADS / ARROWS, Z JUMP, X HIT'},
+  {f:'07-neon-dash', id:'neondash', name:'NEON DASH', genre:'RHYTHM PLATFORMER', story:'JUMP TO THE BEAT, FLIP GRAVITY AND BRING THE MUSIC BACK.', ctl:'TAP / SPACE: JUMP'},
+  {f:'08-neon-rail', id:'neonrail', name:'NEON RAIL', genre:'RHYTHM GAME', story:'16 TRACKS OF SYNTHWAVE. RIDE THE GRID TO THE CONDUCTOR.', ctl:'TAP LEFT / RIGHT, F / J'}
+];
+var NAMES = {}; GAMES.forEach(function(g){ NAMES[g.id] = g.name; });
+function save(id){ try { return JSON.parse(localStorage.getItem(id + '_story') || 'null') || {u:0,s:[]}; } catch(e){ return {u:0,s:[]}; } }
+function esc(t){ return String(t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+var fmt = function(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
+var grid = document.getElementById('grid'), rows = document.getElementById('rows'), PLAYS = null;
+function render(){
+  var total = 0, list = [];
+  grid.innerHTML = ''; rows.innerHTML = '';
+  GAMES.forEach(function(g, i){
+    var sv = save(g.id), st = (sv.s || []).reduce(function(a, b){ return a + (b || 0); }, 0), lvl = Math.min(16, (sv.u || 0) + 1);
+    total += st; list.push({g:g, st:st, lvl:sv.done ? 'DONE' : lvl + '/16'});
+    var n = PLAYS && PLAYS[g.id];
+    var a = document.createElement('article'); a.className = 'cart';
+    a.innerHTML = '<a class="shot" href="games/' + g.f + '.html" tabindex="-1" aria-hidden="true"><img src="img/' + g.f + '.png" alt="" loading="lazy"><span class="num">#0' + (i + 1) + '</span></a>' +
+      '<div class="body"><h3>' + g.name + '</h3><p class="genre">' + g.genre + '</p><p class="story">' + g.story + '</p>' +
+      '<div class="meta"><span class="stars">&#9733; ' + st + '/48</span><span>' + (sv.done ? 'COMPLETE' : 'LEVEL ' + lvl) + '</span></div>' +
+      '<div class="bar"><i style="width:' + Math.round(st / 48 * 100) + '%"></i></div>' +
+      '<p class="controls">' + g.ctl + '</p>' + (n ? '<p class="plays">&#9654; ' + fmt(n) + (n === 1 ? ' PLAY' : ' PLAYS') + '</p>' : '') +
+      '<a class="play" href="games/' + g.f + '.html">' + (st ? 'CONTINUE' : 'PLAY') + '</a></div>';
+    grid.appendChild(a);
+  });
+  list.sort(function(a, b){ return b.st - a.st; }).forEach(function(r, i){
+    var tr = document.createElement('tr'); if (i === 0 && r.st) tr.className = 'top';
+    tr.innerHTML = '<td>' + (i + 1) + '. ' + r.g.name + '</td><td class="r">' + r.st + '/48</td><td class="r">' + r.lvl + '</td>';
+    rows.appendChild(tr);
+  });
+  document.getElementById('hi').textContent = total + '/384';
+  document.getElementById('up').textContent = String(total * 100).padStart(6, '0');
+}
+render();
+
+// ---------- online: nickname, return code, leaderboard, play counter ----------
+var TAB = 'all';
+function pbar(msg){
+  var el = document.getElementById('pbar'), p = AL.player();
+  if (p) {
+    el.innerHTML = 'PLAYER <b>' + esc(p.nick) + '</b><br>YOUR RETURN CODE: <span class="code" id="code">&bull;&bull;&bull;&bull;-&bull;&bull;&bull;&bull;</span> <button type="button" class="lnk" id="show">SHOW</button><br>USE IT TO CONTINUE ON ANOTHER DEVICE. <button type="button" class="lnk" id="out">LOG OUT</button>';
+    document.getElementById('show').onclick = function(){ var c = document.getElementById('code'), b = document.getElementById('show'); if (b.textContent === 'SHOW') { c.textContent = AL.fmtCode(p.code); b.textContent = 'HIDE'; } else { c.innerHTML = '&bull;&bull;&bull;&bull;-&bull;&bull;&bull;&bull;'; b.textContent = 'SHOW'; } };
+    document.getElementById('out').onclick = function(){ AL.logout(); pbar(); board(); };
+    return;
+  }
+  el.innerHTML = 'PICK A NICKNAME TO JOIN THE HIGH SCORES.<br>YOUR STARS FROM THIS DEVICE COUNT TOO.' +
+    '<form id="join"><input id="nick" maxlength="16" autocomplete="nickname" placeholder="NICKNAME" aria-label="Nickname"><button type="submit">JOIN</button></form>' +
+    '<form id="rest" hidden><input id="rcode" maxlength="9" autocomplete="off" placeholder="XXXX-XXXX" aria-label="Return code"><button type="submit">RESTORE</button></form>' +
+    '<button type="button" class="lnk" id="have">I HAVE A RETURN CODE</button><p class="msg" id="msg" role="status">' + (msg || '') + '</p>';
+  document.getElementById('have').onclick = function(){ var r = document.getElementById('rest'), j = document.getElementById('join'); r.hidden = !r.hidden; j.hidden = !r.hidden ? true : false; this.textContent = r.hidden ? 'I HAVE A RETURN CODE' : 'NEW PLAYER'; };
+  document.getElementById('join').onsubmit = function(e){
+    e.preventDefault(); var m = document.getElementById('msg'), n = document.getElementById('nick').value;
+    m.textContent = 'SAVING...';
+    AL.register(n).then(function(r){
+      if (r.ok) { pbar(); render(); board(); return; }
+      m.textContent = r.err === 'taken' ? 'THIS NICKNAME IS TAKEN. TRY ANOTHER.' : r.err === 'nick' ? '3-16 LETTERS, DIGITS, _ . -' : 'SERVER IS BUSY. TRY AGAIN.';
+    }).catch(function(){ m.textContent = 'NO CONNECTION. TRY AGAIN.'; });
+  };
+  document.getElementById('rest').onsubmit = function(e){
+    e.preventDefault(); var m = document.getElementById('msg');
+    m.textContent = 'CHECKING...';
+    AL.restore(document.getElementById('rcode').value).then(function(r){
+      if (r.ok) { pbar(); render(); board(); return; }
+      m.textContent = r.err === 'code' ? 'CODE NOT FOUND.' : 'SERVER IS BUSY. TRY AGAIN.';
+    }).catch(function(){ m.textContent = 'NO CONNECTION. TRY AGAIN.'; });
+  };
+}
+function tabs(){
+  var el = document.getElementById('tabs'), list = [{id:'all', name:'ALL GAMES'}].concat(GAMES);
+  el.innerHTML = list.map(function(g){ return '<button type="button" data-g="' + g.id + '" aria-pressed="' + (g.id === TAB) + '">' + g.name + '</button>'; }).join('');
+  el.querySelectorAll('button').forEach(function(b){ b.onclick = function(){ TAB = b.dataset.g; tabs(); board(); }; });
+}
+function board(){
+  var lb = document.getElementById('lb'), mine = document.getElementById('mine'), note = document.getElementById('lb-note'), max = TAB === 'all' ? 384 : 48;
+  lb.innerHTML = '<tr><td colspan="4">LOADING...</td></tr>'; mine.textContent = ''; note.textContent = '';
+  AL.board(TAB).then(function(r){
+    if (!r.ok) throw 0;
+    var p = AL.player();
+    if (!r.top.length) { lb.innerHTML = '<tr><td colspan="4">NO SCORES YET. BE THE FIRST!</td></tr>'; return; }
+    var html = r.top.map(function(x){
+      var me = r.me && x.rank === r.me.rank;
+      return '<tr class="' + (me ? 'me' : x.rank === 1 ? 'top' : '') + '"><td>' + (x.rank <= 3 ? ['1ST','2ND','3RD'][x.rank - 1] : x.rank) + '</td><td>' + esc(x.nick) + '</td><td class="r">' + x.stars + '/' + max + '</td><td class="r">' + x.levels + '</td></tr>';
+    }).join('');
+    if (r.me && r.me.rank > r.top.length) html += '<tr class="me"><td>' + r.me.rank + '</td><td>' + esc(r.me.nick) + '</td><td class="r">' + r.me.stars + '/' + max + '</td><td class="r">' + r.me.levels + '</td></tr>';
+    lb.innerHTML = html;
+    if (r.me) mine.textContent = 'YOU: ' + r.me.rank + ' OF ' + r.players; else if (p) mine.textContent = 'EARN A STAR TO GET ON THE BOARD';
+    note.textContent = r.players + (r.players === 1 ? ' PLAYER' : ' PLAYERS') + ' ON THE BOARD';
+  }).catch(function(){ lb.innerHTML = '<tr><td colspan="4">HIGH SCORES ARE OFFLINE RIGHT NOW.</td></tr>'; });
+}
+if (AL.enabled()) {
+  document.getElementById('online').hidden = false; document.getElementById('offline').hidden = true;
+  pbar(); tabs();
+  (AL.player() ? AL.sync().then(function(r){ if (!r.ok) pbar(r.err === 'code' ? 'YOUR CODE WAS NOT FOUND. JOIN AGAIN.' : ''); render(); }).catch(function(){}) : Promise.resolve()).then(board, board);
+  AL.stats().then(function(st){
+    if (!st.ok || !st.total) return;
+    PLAYS = st.games; render();
+    document.getElementById('plays').textContent = fmt(st.total); document.getElementById('plays-wrap').hidden = false;
+    if (st.today) { document.getElementById('today').textContent = fmt(st.today); document.getElementById('today-wrap').hidden = false; }
+  }).catch(function(){});
+}
+</script>
+</body>
+</html>

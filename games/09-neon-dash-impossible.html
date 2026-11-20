@@ -140,7 +140,7 @@ function genSegments(b, x0, r, tiers, focus, nPerTier) {
 function buildLevel(i) {
   const lv = LEVELS[i], w = makeWorld(lv.speed), b = builder(w);
   if (lv.build) w.END = lv.build(b) * U;
-  else if (lv.grief) { const r = rng(lv.grief); let x = 8; for (let k = 0; k < 14; k++) x += GP[GPN[Math.floor(r() * GPN.length)]](b, x, r); w.END = (x + 1) * U; }
+  else if (lv.grief) { const r = rng(lv.grief); let x = 8; for (let k = 0; k < 14; k++) x += GP[GPN[Math.floor(r() * GPN.length)]](b, x, r); b.spike(x + 1.5); b.spike(x + 2.5); w.END = (x + 3.15) * U; }
   else { const end = genSegments(b, 12, rng(lv.seed), lv.tiers, lv.focus, 4); w.END = (end + 2) * U; }
   sortW(w); return w;
 }
